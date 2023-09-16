@@ -1,25 +1,30 @@
----
 version: "3"
 services:
   db:
-    image: mariadb:11.1
+    image: docker.io/bitnami/mariadb:11.0
     volumes:
-      - db_data:/var/lib/mysql
+      - './db_data:/bitnami/mariadb'
     restart: always
+    ports:
+      - "3306:3306"
     environment:
-      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MARIADB_ROOT_PASSWORD: CHANGE_PASSWORD
       MARIADB_DATABASE: hesk
       MARIADB_USER: hesk
       # Please change the password before deploying.
-      MARIADB_PASSWORD: hesk
-    
-  wordpress:
+      MARIADB_PASSWORD: CHANGE_PASSWORD
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+
+  hesk:
     depends_on:
       - db
-    image: ghcr.io/luketainton/hesk:latest
+    image: hesk_343_volume:latest
+    volumes:
+      - ./hesk:/srv
     ports:
-      - "80:80"
+      - "8080:80"
     restart: always
-volumes:
-  db_data: {}
-...

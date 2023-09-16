@@ -1,7 +1,8 @@
 FROM php:apache
-LABEL maintainer="Luke Tainton <luke@tainton.uk>"
-LABEL org.opencontainers.image.source="https://github.com/luketainton/hesk-docker"
-COPY --chown=www-data:www-data hesk /srv
+LABEL maintainer="Surya T <contact@picafe.me>"
+LABEL org.opencontainers.image.source="https://github.com/picafe/hesk-docker"
+RUN mkdir -p /srv \
+    chown www-data:www-data /srv
 COPY vhost.conf /etc/apache2/sites-enabled/000-default.conf
 RUN apt-get update && \
     apt-get install -y libc-client-dev libkrb5-dev --no-install-recommends && \
